@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class HttpClientService {
-  constructor(private httpClient: HttpClient, @Inject("baseUrl") private baseUrl: string) { }
+  constructor(private httpClient: HttpClient, @Inject('BASE_URL') private baseUrl: string) { }
 
   private url(requestParameter: Partial<RequestParameters>): string {
     return `${requestParameter.baseUrl ? requestParameter.baseUrl : this.baseUrl}/${requestParameter.controller}${requestParameter.action ? `/${requestParameter.action}` : ""}`;
