@@ -20,9 +20,8 @@ export class LoginComponent {
         const returnUrl: string = params["returnUrl"];
         if (returnUrl)
           this.router.navigate([returnUrl]);
+        
           
-          this.router.navigate(["callcenter"]);
-          location.reload();  
       });
     });
   }

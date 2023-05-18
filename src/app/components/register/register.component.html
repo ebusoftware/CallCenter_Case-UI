@@ -14,8 +14,15 @@
                   <div class="input-group-text">
                     <span class="fas fa-user"></span>
                   </div>
+                  
                 </div>
+                
               </div>
+              <div *ngIf="!nameSurname.valid && (nameSurname.dirty || nameSurname.touched)" class="valdiator-div">
+                <!-- {{nameSurname.errors | json}} -->
+                Zorunlu Alan. En az 3 Karakter girin!
+              </div>
+              &nbsp;
               <div class="input-group mb-3">
                   <input type="text" class="form-control" formControlName="username" placeholder="Kullanıcı Adı">
                   <div class="input-group-append">
@@ -24,6 +31,11 @@
                     </div>
                   </div>
                 </div>
+                <div *ngIf="!username.valid && (username.dirty || username.touched)" class="valdiator-div">
+                  Zorunlu Alan. En az 3 Karakter girin!
+                </div>
+
+                &nbsp;
               <div class="input-group mb-3">
                 <input type="email" class="form-control" formControlName="email" placeholder="Email">
                 <div class="input-group-append">
@@ -32,6 +44,14 @@
                   </div>
                 </div>
               </div>
+
+              <div *ngIf="!email.valid && (email.dirty || email.touched)" class="valdiator-div">
+                Zorunlu Alan. Mail formatını doğru girin!
+                örn:Ahmet@gmail.com
+              </div>
+              
+
+              &nbsp;
               <div class="input-group mb-3">
                 <input type="password" class="form-control" formControlName="password"  placeholder="Şifre">
                 <div class="input-group-append">
@@ -40,6 +60,12 @@
                   </div>
                 </div>
               </div>
+
+              <div *ngIf="!password.valid && (password.dirty || password.touched)" class="valdiator-div">
+                Zorunlu Alan. 3 - 15 karakter arası değer girin!
+              </div>
+              
+              &nbsp;
               <div class="input-group mb-3">
                 <input  type="password" class="form-control"formControlName="passwordConfirm" placeholder="Şifreyi Onayla">
                 <div class="input-group-append">
@@ -48,12 +74,17 @@
                   </div>
                 </div>
               </div>
+              <div *ngIf="frm.hasError('notSame')" class="valdiator-div">
+                Şifreler eşleşmiyor!
+              </div>
+              
+
               <div class="row">
                 <div class="col-8">
                 </div>
                 <!-- /.col -->
                 <div class="col-4">
-                  <button  type="submit" class="btn btn-primary btn-block">Kayıt Ol</button>
+                  <button [disabled]="!frm.valid" type="submit" class="btn btn-primary btn-block">Kayıt Ol</button>
                 </div>
                 <!-- /.col -->
               </div>

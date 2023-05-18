@@ -1,4 +1,4 @@
-import { DebugElement, Injectable } from '@angular/core';
+import { DebugElement, EventEmitter, Injectable } from '@angular/core';
 import { JwtHelperService } from '@auth0/angular-jwt';
 
 @Injectable({
@@ -6,8 +6,22 @@ import { JwtHelperService } from '@auth0/angular-jwt';
 })
 export class DecodeService {
 
+  public decodedTokenUpdated: EventEmitter<void> = new EventEmitter();//Tetiklenecek
+
+  updateDecodedToken(): void {
+    this.userRoles = null;
+    this.decodedTokenUpdated.emit();
+  }
+
   constructor(private jwtHelper:JwtHelperService) { }
   userRoles: any = '';
+
+  authenticatedValue(): boolean {
+    const isAuthenticated = localStorage.getItem('isAuthenticated');
+    if (isAuthenticated === 'false')
+      return false;
+    return true;
+  }
 
   getUserId():string{
     let decode =  this.jwtHelper.decodeToken(localStorage.getItem("accessToken"));

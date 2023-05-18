@@ -6,6 +6,7 @@ import { RouterModule } from '@angular/router';
 import { RegisterComponent } from './register/register.component';
 import { RegisterModule } from './register/register.module';
 import { FormsModule } from '@angular/forms';
+import { ListCallrecordComponent } from './callrecords/list-callrecord/list-callrecord.component';
 
 
 

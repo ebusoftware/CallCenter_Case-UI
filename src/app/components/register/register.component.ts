@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
-import { FormControl, FormGroup, UntypedFormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormControl, FormGroup, UntypedFormGroup, ValidationErrors, Validators } from '@angular/forms';
 import { Create_User } from 'src/app/contracts/create-user';
 import { User } from 'src/app/contracts/user';
 import { CustomToastrService, ToastrMessageType, ToastrPosition } from 'src/app/services/custom-toastr.service';
 import { UserService } from 'src/app/services/user.service';
+import { matchPassword } from 'src/app/validators/match-password';
 
 @Component({
   selector: 'app-register',
@@ -11,17 +12,23 @@ import { UserService } from 'src/app/services/user.service';
   styleUrls: ['./register.component.scss']
 })
 export class RegisterComponent {
-  constructor(private userService: UserService, private toastrService: CustomToastrService){}
-    frm = new FormGroup({
-    nameSurname: new FormControl('', [Validators.required, Validators.minLength(3)]),
-    username: new FormControl('', [Validators.required, Validators.minLength(3)]),
-    email: new FormControl('', [Validators.required, Validators.email]),
-    password: new FormControl('', [Validators.required, Validators.minLength(8)]),
-    passwordConfirm: new FormControl('', [Validators.required, Validators.minLength(8)]),
-    
-  });
+  frm:FormGroup;
+  constructor(private userService: UserService, private toastrService: CustomToastrService,private formbuilder:FormBuilder,){
+    this.frm = formbuilder.group({
+      nameSurname:["",[Validators.required,Validators.minLength(3)]],
+      username:["",[Validators.required,Validators.minLength(3)]],
+      email:["",Validators.email],
+      password:["",[Validators.required,Validators.minLength(3),Validators.maxLength(15)]],
+      passwordConfirm:["",Validators.required,]
+    },{
+      validators: (group: AbstractControl): ValidationErrors | null => {
+        let sifre = group.get("password").value;
+        let sifreTekrar = group.get("passwordConfirm").value;
+        return sifre === sifreTekrar ? null : { notSame: true };
+      }
+    })
 
-
+  }
   async onSubmit() 
   {
     const create_user: User = new User();
@@ -34,15 +41,37 @@ export class RegisterComponent {
   
     const result: Create_User = await this.userService.create(create_user);
     if (result.succeeded)
+    
       this.toastrService.message(result.message, "Kullanıcı Kaydı Başarılı", {
         messageType: ToastrMessageType.Success,
         position: ToastrPosition.TopRight
-      })
+        
+      }
+      
+      )
     else
       this.toastrService.message(result.message, "Hata", {
         messageType: ToastrMessageType.Error,
         position: ToastrPosition.TopRight
       })
+      
+  }
+
+
+  get nameSurname(){
+    return this.frm.get("nameSurname");
+  }
+  get username(){
+    return this.frm.get("username");
+  }
+  get email(){
+    return this.frm.get("email");
+  }
+  get password(){
+    return this.frm.get("password");
+  }
+  get passwordConfirm(){
+    return this.frm.get("passwordConfirm");
   }
 
 }

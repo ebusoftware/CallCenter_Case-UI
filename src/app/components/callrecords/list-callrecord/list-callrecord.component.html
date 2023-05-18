@@ -1,0 +1,158 @@
+
+<div class="card">
+
+      <section class="content-header">
+            <div class="container-fluid">
+              <div class="row mb-2">
+                <div class="col-sm-6">
+                  <h1>Görüşmeler</h1>
+                </div>
+                <div class="col-sm-6">
+                  <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item">Ürünler</li>
+                    <li class="breadcrumb-item active">Yönet</li>
+                  </ol>
+                </div>
+              </div>
+            </div><!-- /.container-fluid -->
+          </section>
+          
+
+          <div class="card-header">
+            <h3 class="card-title">Temsilciye Göre Filtrele</h3>
+            
+            <select class="form-control" style="border-radius: 30px; cursor: pointer;" [(ngModel)]="selectedRepresentativeId" (change)="handleRepresentativeSelection(selectedRepresentativeId)">
+              <option [value]="0" (click)="getCallRecords()" style="color: brown;" >
+                Tümünü Listele  
+              </option>
+              <option *ngFor="let representative of representatives" [value]="representative.id">
+                {{ representative.nameSurname }}
+              </option>
+            </select>
+          </div>
+      <!-- /.card-header -->
+      <div class="card-body">
+        <table class="table table-bordered">
+          <thead>
+            <tr >
+              <th style="width: 10px">Id</th>
+              <th>Kullanıcı Adı</th>
+              <th>İstek Türü</th>
+              <th>Açıklama</th>
+              <th>Cevap</th>
+              <th>Yanıt Zamanı</th>
+              <th>Cevaplayan</th>
+              <th>Durum</th>
+
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let callrecord of callRecords">
+              <td >
+                 <p> {{callrecord.id}}</p>
+              </td>
+              <td>
+                  {{callrecord.nameSurname}}
+              </td>
+              <td>
+                  {{callrecord.requestType}}
+              </td>
+              <td>
+                <div *ngIf="callrecord.notes; else nullDescription" > 
+                  {{callrecord.notes}}
+                </div>
+                <ng-template #nullDescription>
+                  <div class="nulCheckData">
+                    <u>Açıklama Yok</u>
+                  </div>
+                </ng-template>
+              </td>
+              <td style="background-color: bisque;">
+                {{callrecord.reply? callrecord.reply : "Henüz Cevap Verilmedi."}}
+              </td>
+              <td >
+                <div *ngIf="callrecord.responseTime; else nullResponseTime" > 
+                  {{callrecord.responseTime}}
+                </div>
+                <ng-template #nullResponseTime >
+                  <div class="nulCheckData">
+                    <span class="badge bg-danger">Dönüş Yapılmadı</span>
+                  </div>
+                </ng-template>
+              </td>
+              <td >
+                <div *ngIf="callrecord.representativeName; else nullUserName" > 
+                  {{callrecord.representativeName}}
+                </div>
+                <ng-template #nullUserName >
+                  <div class="nulCheckData">
+                    <span class="badge bg-danger">Kullanıcı belirlenemedi.</span>
+                  </div>
+                </ng-template>
+              </td>
+              
+              
+              <td>
+                  <div> 
+                    <button type="button" class="btn btn-block bg-gradient-primary" data-toggle="modal" data-target="#exampleModal" *ngIf="!callrecord.responseTime" (click)="setId(callrecord.id)" >Yanıtla</button>
+                    <button type="button" class="btn btn-block bg-gradient-danger" (click)="deleteCallRecord(callrecord.id)">Sil</button>
+                  </div>
+                </td>
+                
+            </tr>
+            <tr>
+              <div class="container">
+                <div class="row">
+                  <div class="col">
+                    Toplam:{{totalCallRecordCount}}
+                  </div>
+                </div>
+              </div>
+            </tr>
+          </tbody>
+          
+        </table>
+      </div>
+      <div class="card-footer clearfix">
+        <ul class="pagination pagination-sm m-0 float-right">
+          <li class="page-item" *ngIf="selectedPage != 1">
+            <button class="page-link" (click)="changePage(1)">
+              «
+            </button>
+          </li>
+          <li class="page-item" [ngClass]="selectedPage == page ? 'active' : ''" *ngFor="let page of getPageNumbers()">
+            <button class="page-link" (click)="changePage(page)">
+              {{ page }}
+            </button>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">{{callrecordId}} Id'li Talebi Cevapla</h5>
+            <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <div>
+              
+              <div class="input-group mb-3">
+                <input type="text" #txtMessage class="form-control" placeholder="Cevap..." id="username">
+                <div class="input-group-append">
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Kapat</button>
+            <button type="button" class="btn btn-primary" (click)="createResponse(callrecordId,txtMessage)">Cevapla</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    
