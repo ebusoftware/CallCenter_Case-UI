@@ -4,7 +4,7 @@
         <!-- <img src="./assets/dist/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8"> -->
         <img src="./../../../assets/dist/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
 
-        <span class="brand-text font-weight-light" >Alışveriş Sepeti</span>
+        <span class="brand-text font-weight-light" >Müşteri Hizmetleri</span>
       </a>
   
       <!-- Sidebar -->
@@ -87,21 +87,20 @@
                   </a>
                 </li>
 
-
                 <li *ngIf="isAuthorized" class="nav-item">
-                  <a routerLink="products" class="nav-link">
+                  <a routerLink="user" class="nav-link">
                     <i class="nav-icon fas fa-chart-pie"></i>
                     <p>
-                      Müşteriler
+                      Kullanıcıları Yönet
                     </p>
                   </a>
                 </li>
 
-                <li *ngIf="isAuthorized" class="nav-item">
-                  <a routerLink="request" class="nav-link">
+                <li class="nav-item">
+                  <a routerLink="create-request" class="nav-link">
                     <i class="nav-icon fas fa-chart-pie"></i>
                     <p>
-                      Kullanıcıları Yönet
+                      Rol İşlemleri
                     </p>
                   </a>
                 </li>

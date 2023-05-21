@@ -9,6 +9,7 @@ import { CreateCallrecordComponent } from './components/callrecords/create-callr
 import { AuthGuard } from './guards/common/auth.guard';
 import { ListCallRecord } from './contracts/list-call-record';
 import { ListCallrecordComponent } from './components/callrecords/list-callrecord/list-callrecord.component';
+import { UserComponent } from './components/user/user.component';
 
 const routes: Routes = [
 
@@ -16,6 +17,7 @@ const routes: Routes = [
   {
      path: "callcenter", component: LayoutComponent, children: [
       { path: "", component: DashboardComponent },
+      { path:"user", component: UserComponent,canActivate:[AuthGuard] },
       {path:"login", component:LoginComponent , loadChildren:()=> import('./components/login/login.module').then(m=>m.LoginModule)},
       {path:"register", component:RegisterComponent , loadChildren:()=> import('./components/register/register.module').then(m=>m.RegisterModule)},
       {path:"create-request", component:CreateRequestComponent , loadChildren:()=> import('./components/requests/create-request/create-request.module').then(m=>m.CreateRequestModule),canActivate:[AuthGuard]},

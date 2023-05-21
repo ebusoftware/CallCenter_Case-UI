@@ -3,12 +3,14 @@ import { CommonModule } from '@angular/common';
 import { ListCallrecordComponent } from './list-callrecord.component';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { SearchfilterPipe } from 'src/app/pipes/searchfilter.pipe';
 
 
 
 @NgModule({
   declarations: [
-    ListCallrecordComponent
+    ListCallrecordComponent,
+    SearchfilterPipe
   ],
   imports: [
     CommonModule,

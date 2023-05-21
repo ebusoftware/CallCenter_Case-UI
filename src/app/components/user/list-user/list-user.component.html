@@ -1,0 +1,127 @@
+<div class="col-lg-3 col-6">
+  <!-- small card -->
+  <div class="small-box bg-warning">
+    <div class="inner">
+      <h3>{{totalUsersCount}}</h3>
+
+      <p>Toplam Kullanıcı</p>
+    </div>
+    <div class="icon">
+      <i class="fas fa-user-plus"></i>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+
+
+          <div class="card-header">
+            <div class="container">
+
+              <div class="col">
+                <div class="btn-group" role="group">
+                  <button (click)="getUsers()" type="button" class="btn btn-outline-info"><i class="bi bi-arrow-clockwise"></i></button>
+                  <button (click)="downloadPDF()" type="button" class="btn btn-outline-info"><i class="bi bi-filetype-pdf">PDF</i></button>
+                  <button (click)="downloadExcel()" type="button" class="btn btn-outline-info"><i class="bi bi-filetype-csv">Excel</i></button>
+                  <button type="button" class="btn btn-outline-info"><i class="bi bi-printer"></i>Yazdır</button>
+                  
+              </div>
+              </div>
+              
+          </div>
+      <!-- /.card-header -->
+      <div class="card-body">
+        <table class="table table-bordered" id="users-table">
+          <thead>
+            <tr >
+              <th style="width: 10px">Id</th>
+              <th>Adı Soyadı</th>
+              <th>Kullanıcı Adı</th>
+              <th>E-mail</th>
+              <th>Çift Doğrulama</th>
+
+
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let user of users">
+              <td >
+                 <p> {{user.id}}</p>
+              </td>
+              <td>
+                  {{user.nameSurname}}
+              </td>
+              <td>
+                  {{user.userName }}
+              </td>
+              <td>
+                {{user.email}}
+              </td>
+              <td >
+                <div *ngIf="user.twoFactorEnabled; else nullUserName" >
+                  <span class="badge bg-success">Doğrulama Yapıldı</span>
+                </div>
+                <ng-template #nullUserName >
+                  <div class="nulCheckData">
+                    <span class="badge bg-danger">Doğrulama Yapılmadı</span>
+                  </div>
+                </ng-template>
+              </td>
+              
+              
+              <td>
+                  <div> 
+                    <!-- <button type="button" class="btn btn-block bg-gradient-primary" data-toggle="modal" data-target="#exampleModal" *ngIf="!user.responseTime" (click)="setId(callrecord.id)" >Yanıtla</button> -->
+                    <button type="button" class="btn btn-block bg-gradient-danger" (click)="deleteUser(user.id)">Sil</button>
+                  </div>
+                </td>
+                
+            </tr>
+          </tbody>
+          
+        </table>
+      </div>
+      <div class="card-footer clearfix">
+            <ul class="pagination pagination-sm m-0 float-right">
+                 <div class="col mr-5">
+                  Toplam:{{totalUsersCount}}
+                 </div>     
+              <li class="page-item" *ngIf="selectedPage != 1">
+                <button class="page-link" (click)="changePage(1)">
+                  «
+                </button>
+              </li>
+              <li class="page-item" [ngClass]="selectedPage == page ? 'active' : ''" *ngFor="let page of getPageNumbers()">
+                <button class="page-link" (click)="changePage(page)">
+                  {{ page }}
+                </button>
+              </li>
+            </ul>
+          </div>
+    </div>
+
+    <!-- Modal
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">{{callrecordId}} Id'li Talebi Cevapla</h5>
+            <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <div>
+              
+              <div class="input-group mb-3">
+                <input type="text" #txtMessage class="form-control" placeholder="Cevap..." id="username">
+                <div class="input-group-append">
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Kapat</button>
+            <button type="button" class="btn btn-primary" (click)="createResponse(callrecordId,txtMessage)">Cevapla</button>
+          </div>
+        </div>
+      </div>
+    </div> -->

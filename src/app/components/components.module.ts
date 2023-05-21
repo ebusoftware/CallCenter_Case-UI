@@ -7,14 +7,17 @@ import { RegisterComponent } from './register/register.component';
 import { RegisterModule } from './register/register.module';
 import { FormsModule } from '@angular/forms';
 import { ListCallrecordComponent } from './callrecords/list-callrecord/list-callrecord.component';
+import { UserModule } from './user/user.module';
 
 
 
 @NgModule({
   declarations: [
+    
   ],
   imports: [
     RouterModule,
+    UserModule,
     CommonModule,
     DashboardModule,
     LoginModule,

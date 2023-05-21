@@ -1,3 +1,22 @@
+<section class="content-header">
+  <div class="container-fluid">
+    <div class="row mb-2">
+      <div class="col-sm-6">
+        <h1>Talepler</h1>
+      </div>
+      <div class="col-sm-6">
+        <ol class="breadcrumb float-sm-right">
+          <li class="breadcrumb-item"><a href="#">Anasayfa</a></li>
+          <li class="breadcrumb-item active">Talep Oluştur</li>
+        </ol>
+      </div>
+    </div>
+  </div><!-- /.container-fluid -->
+</section>
+
+
+
+
 <section class="content">
 
       <!-- Default box -->
@@ -14,11 +33,11 @@
           <div class="col-7">
             <div class="form-group">
               <label for="inputName">Talep Başlığı</label>
-              <input type="text" id="inputName" class="form-control" #txtTitle>
+              <input type="text" id="inputName" class="form-control" #txtTitle required>
             </div>
             <div class="form-group">
               <label for="inputMessage">Mesajınız</label>
-              <textarea id="inputMessage" class="form-control" rows="4" #txtMessage></textarea>
+              <textarea id="inputMessage" class="form-control" rows="4" #txtMessage required></textarea>
             </div>
             <div class="form-group">
             <button  type="submit" class="btn btn-primary btn-block" (click)="create(txtTitle,txtMessage)">Talep Oluştur</button>

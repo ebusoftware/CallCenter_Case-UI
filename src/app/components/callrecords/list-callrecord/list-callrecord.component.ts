@@ -5,6 +5,13 @@ import { ListUser } from 'src/app/contracts/list-user';
 import { CallrecordService } from 'src/app/services/callrecord.service';
 import { CustomToastrService, ToastrMessageType, ToastrPosition } from 'src/app/services/custom-toastr.service';
 import { UserService } from 'src/app/services/user.service';
+import * as XLSX from 'xlsx';
+import { saveAs } from 'file-saver';
+import html2pdf from 'html2pdf.js';
+import { SignalRService } from 'src/app/services/signalr.service';
+import { HubUrls } from 'src/app/constants/hub-urls';
+import { ReceiveFunctions } from 'src/app/constants/receive-functions';
+
 
 
 
@@ -20,22 +27,47 @@ export class ListCallrecordComponent implements OnInit {
     private toastrService:CustomToastrService,
     private cdr: ChangeDetectorRef,
     private ngZone: NgZone,
-    private userService:UserService
-    ){}
-  
-  callrecordId:number;
-  callRecords:ListCallRecord[]=null;
-  representatives:ListUser[]=null;
-
+    private userService:UserService,
+    private signalRService: SignalRService
+    ){
+      signalRService.start(HubUrls.CallRecordHub);
+    }
+  // number
   CallRecordPerPage:number=5;
   selectedPage:number=1;
   totalCallRecordCount:number;
+  callrecordId:number;
   totalRepresentative:number;
+  //list
+  callRecords:ListCallRecord[]=null;
+  representatives:ListUser[]=null;
+  //string
   selectedRepresentativeId:string;
-
+  searchQuery: string = '';
+  //class
+  selectedSearchOption: keyof ListCallRecord;
+  // boolean
+  isActive:boolean;
+  isSearchVisible:boolean;
 
   setId(id:number){
     this.callrecordId = id;
+  }
+  
+  getUnansweredCallCount(): number {
+    let unansweredCount = 0;
+    for (const callRecord of this.callRecords) {
+      if (callRecord.responseTime==null) {
+        unansweredCount++;
+      }
+    }
+   this.getCallRecords()
+    return unansweredCount;
+  }
+  
+
+  toggleSearchBar() {
+    this.isSearchVisible = !this.isSearchVisible;
   }
 
   async handleRepresentativeSelection(representativeId: string) {
@@ -87,6 +119,36 @@ export class ListCallrecordComponent implements OnInit {
     .map((_, i) => i + 1);
 }
 
+downloadExcel() {
+  const element = document.getElementById('callRecords-table'); // Tablonun bulunduğu elementin ID'si
+  const ws: XLSX.WorkSheet = XLSX.utils.table_to_sheet(element);
+
+  const wb: XLSX.WorkBook = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, 'Gorusmeler');
+
+  const wbout: ArrayBuffer = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
+  const date = new Date().toISOString().slice(0, 19).replace(/:/g,''); // Dosya adına tarih eklemek için kullanılabilir
+
+  saveAs(new Blob([wbout], { type: 'application/octet-stream' }), 'tablo-' + date + '.xlsx'); // Dosya adını ve türünü belirleyin
+}
+
+downloadPDF() {
+  const element = document.getElementById('callRecords-table'); // Tablonun bulunduğu elementin ID'si
+  
+  const date = new Date().toISOString().slice(0, 19).replace(/:/g,'');
+  // html2pdf nesnesini oluştur
+  const opt = {
+    filename: `Gorusmeler-${date}.pdf`,
+    margin: [5, 10, 5, 10],
+    image: { type: 'jpeg', quality: 0.98 },
+    html2canvas: { scale: 1 },
+    jsPDF: { unit: 'mm', format: 'letter', orientation: 'portrait' }
+  };
+
+  // Tabloyu PDF'e dönüştür ve indir
+  html2pdf().set(opt).from(element).save();
+}
+
 async createResponse(id: number,reply:HTMLInputElement) {
   try {
     await this.callRecordService.createResponse(id,reply.value);
@@ -131,7 +193,9 @@ changePage(page:number){
  async ngOnInit(){
   await this.getRepresentatives();
   await this.getCallRecords();
-  
+  this.signalRService.on(ReceiveFunctions.CallRecordAddedMessageReceiveFunction, message => {
+    this.toastrService.message(message,"Yeni Talep",{messageType:ToastrMessageType.Info,position:ToastrPosition.TopFullWidth});
+  });
   
 
 }

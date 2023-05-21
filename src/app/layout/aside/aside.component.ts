@@ -12,6 +12,8 @@ import { Subject } from 'rxjs';
 export class AsideComponent implements OnInit {
   constructor(private decodeService:DecodeService, private authService: AuthService){ }
   isAuthorized:boolean;
+  isAdmin:boolean;
+
   userName:string =null;
   userRole:string= null;
 
@@ -20,6 +22,13 @@ export class AsideComponent implements OnInit {
       'Temsilci',
       'Admin'
       ));
+  }
+  
+  getRoleAdmin():boolean{
+    return (this.isAdmin = this.decodeService.roleNameFilter(
+      'Admin'
+      ));
+  
   }
 
   
@@ -30,6 +39,7 @@ export class AsideComponent implements OnInit {
         this.userName = this.decodeService.getUserName();
         this.userRole = this.decodeService.getRoleName();
         this.getRole();
+        this.getRoleAdmin();
       } else {
         this.userName = null;
         this.userRole = null;

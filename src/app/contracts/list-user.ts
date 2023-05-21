@@ -3,4 +3,6 @@ export class ListUser {
       userName:string;
       email:string;
       nameSurname:string;
+      twoFactorEnabled:boolean;
+      roles:string[];
 }

@@ -1,38 +1,111 @@
-
+<section class="content-header">
+  <div class="container-fluid">
+    <div class="row mb-2">
+      <div class="col-sm-6">
+        <h1>Görüşmeler</h1>
+      </div>
+      <div class="col-sm-6">
+        <ol class="breadcrumb float-sm-right">
+          <li class="breadcrumb-item">Ürünler</li>
+          <li class="breadcrumb-item active">Yönet</li>
+        </ol>
+      </div>
+    </div>
+  </div><!-- /.container-fluid -->
+  <div class="row">
+    <div class="col-lg-3 col-6">
+      <!-- small card -->
+      <div class="small-box bg-danger">
+        <div class="inner">
+          <h3>{{isActive ?  totalCallRecordCount : ''}}</h3>
+          <p>Kayıt Sayısı</p>
+        </div>
+        <div class="icon">
+          <i class="fas fa-chart-pie"></i>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-3 col-6">
+      <!-- small card -->
+      <div class="small-box bg-danger">
+        <div class="inner">
+          <h3>{{totalRepresentative}}</h3>
+          <p>Temsilci Sayısı</p>
+        </div>
+        <div class="icon">
+          <i class="fas fa-user-plus"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 <div class="card">
 
-      <section class="content-header">
-            <div class="container-fluid">
-              <div class="row mb-2">
-                <div class="col-sm-6">
-                  <h1>Görüşmeler</h1>
-                </div>
-                <div class="col-sm-6">
-                  <ol class="breadcrumb float-sm-right">
-                    <li class="breadcrumb-item">Ürünler</li>
-                    <li class="breadcrumb-item active">Yönet</li>
-                  </ol>
-                </div>
-              </div>
-            </div><!-- /.container-fluid -->
-          </section>
           
 
           <div class="card-header">
-            <h3 class="card-title">Temsilciye Göre Filtrele</h3>
-            
-            <select class="form-control" style="border-radius: 30px; cursor: pointer;" [(ngModel)]="selectedRepresentativeId" (change)="handleRepresentativeSelection(selectedRepresentativeId)">
-              <option [value]="0" (click)="getCallRecords()" style="color: brown;" >
-                Tümünü Listele  
-              </option>
-              <option *ngFor="let representative of representatives" [value]="representative.id">
-                {{ representative.nameSurname }}
-              </option>
-            </select>
+            <div class="container">
+
+              <div class="col">
+                <div class="btn-group" role="group">
+                  <button (click)="ngOnInit()" type="button" class="btn btn-outline-info"><i class="bi bi-arrow-clockwise"></i></button>
+                  <button (click)="toggleSearchBar()" type="button" class="btn btn-outline-info"><i class="bi bi-search"></i></button>
+                  <button (click)="downloadPDF()" type="button" class="btn btn-outline-info"><i class="bi bi-filetype-pdf">PDF</i></button>
+                  <button (click)="downloadExcel()" type="button" class="btn btn-outline-info"><i class="bi bi-filetype-csv">Excel</i></button>
+                  <button type="button" class="btn btn-outline-info"><i class="bi bi-printer"></i>Yazdır</button>
+                  
+              </div>
+              </div>
+              <div class="col">
+                    <!-- Arama çubuğu -->
+                    <div class="search-bar" *ngIf="isSearchVisible">
+                    <input type="radio" name="searchOption" value="nameSurname" [(ngModel)]="selectedSearchOption">
+                    <label for="nameSurname">Ad Soyad</label>
+
+                    <input type="radio" name="searchOption" value="notes" [(ngModel)]="selectedSearchOption">
+                    <label for="notes">Açıklama</label>
+
+                    <input type="radio" name="searchOption" value="requestType" [(ngModel)]="selectedSearchOption">
+                    <label for="phone">İstek Türü</label>
+
+                    <input type="radio" name="searchOption" value="responseTime" [(ngModel)]="selectedSearchOption">
+                    <label for="responseTime">Yanıt Zamanı</label>
+
+                    <input type="requestType" [(ngModel)]="searchQuery" class="form-control form-control-lg" placeholder="Arama yap..." value="Ara">
+                
+              </div>
+              </div>
+
+
+
+
+
+              <div class="row">
+                <h3 class="card-title col mx-3">Temsilciye Göre Filtrele</h3>
+              </div>
+              <div class="container">
+                <div class="row">
+                  <select class="form-control" style="border-radius: 30px; cursor: pointer;" [(ngModel)]="selectedRepresentativeId" (change)="handleRepresentativeSelection(selectedRepresentativeId)">
+                    <option [value]="0" (click)="getCallRecords()" style="color: brown;" >
+                      Tümünü Listele  
+                    </option>
+                    <option *ngFor="let representative of representatives" [value]="representative.id">
+                      {{ representative.nameSurname }}
+                    </option>
+                  </select>
+                </div>
+                <div class="row col mx-3">
+                  <div class="form-check form-switch">
+                    <input class="form-check-input" [(ngModel)]="isActive" type="checkbox" id="flexSwitchCheckChecked" checked>
+                    <label class="form-check-label" [class.active]="isActive" for="flexSwitchCheckChecked">Kayıt Sayısı Göster</label>
+                  </div>
+                </div>
+                
+            </div>
           </div>
       <!-- /.card-header -->
       <div class="card-body">
-        <table class="table table-bordered">
+        <table class="table table-bordered" id="callRecords-table">
           <thead>
             <tr >
               <th style="width: 10px">Id</th>
@@ -47,7 +120,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let callrecord of callRecords">
+            <tr *ngFor="let callrecord of callRecords | searchfilter : searchQuery : selectedSearchOption">
               <td >
                  <p> {{callrecord.id}}</p>
               </td>
@@ -100,21 +173,15 @@
                 </td>
                 
             </tr>
-            <tr>
-              <div class="container">
-                <div class="row">
-                  <div class="col">
-                    Toplam:{{totalCallRecordCount}}
-                  </div>
-                </div>
-              </div>
-            </tr>
           </tbody>
           
         </table>
       </div>
       <div class="card-footer clearfix">
         <ul class="pagination pagination-sm m-0 float-right">
+             <div class="col mr-5">
+              Toplam:{{isActive ?  totalCallRecordCount : ''}}
+             </div>     
           <li class="page-item" *ngIf="selectedPage != 1">
             <button class="page-link" (click)="changePage(1)">
               «
@@ -128,7 +195,7 @@
         </ul>
       </div>
     </div>
-
+</div>
     <!-- Modal -->
     <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
       <div class="modal-dialog">

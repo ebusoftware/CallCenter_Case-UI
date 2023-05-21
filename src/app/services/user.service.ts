@@ -17,10 +17,21 @@ export class UserService {
 
   async create(user: User): Promise<Create_User> {
     const observable: Observable<Create_User | User> = this.httpClientService.post<Create_User | User>({
-      controller: "users"
+      controller: "users",
     }, user);
 
     return await firstValueFrom(observable) as Create_User;
+  }
+  async getAll(page: number = 0, size: number = 5, successCallBack?: () => void, errorCallBack?: (errorMessage: string) => void): Promise<{ totalUsersCount: number; users: ListUser[]}> {
+    const promiseData: Promise<{ totalUsersCount: number; users: ListUser[]}> = this.httpClientService.get<{ totalUsersCount: number; users: ListUser[]}>({
+      controller: "users",
+      queryString: `page=${page}&size=${size}`
+    }).toPromise();
+
+    promiseData.then(d => successCallBack())
+      .catch((errorResponse: HttpErrorResponse) => errorCallBack(errorResponse.message))
+
+    return await promiseData;
   }
 
   async getFilterByRoleName(page: number = 0, size: number = 5,roleName:string, successCallBack?: () => void, errorCallBack?: (errorMessage: string) => void): Promise<{ totalCount: number; datas: ListUser[]}> {
