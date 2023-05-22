@@ -71,7 +71,7 @@
               
               <td>
                   <div> 
-                    <!-- <button type="button" class="btn btn-block bg-gradient-primary" data-toggle="modal" data-target="#exampleModal" *ngIf="!user.responseTime" (click)="setId(callrecord.id)" >Yanıtla</button> -->
+                    <button type="button" class="btn btn-block bg-gradient-primary" data-toggle="modal" data-target="#exampleModal" *ngIf="isAdmin" (click)="setUserId(user.id,user.userName)" >Rol Ata</button>
                     <button type="button" class="btn btn-block bg-gradient-danger" (click)="deleteUser(user.id)">Sil</button>
                   </div>
                 </td>
@@ -100,28 +100,26 @@
           </div>
     </div>
 
-    <!-- Modal
+    
     <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">{{callrecordId}} Id'li Talebi Cevapla</h5>
+            <h5 class="modal-title" id="exampleModalLabel">{{selectedUserName}} Kullanıcısına Rol Ata</h5>
             <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-            <div>
-              
-              <div class="input-group mb-3">
-                <input type="text" #txtMessage class="form-control" placeholder="Cevap..." id="username">
-                <div class="input-group-append">
-                </div>
-              </div>
+            <div *ngFor="let role of roles">
+              <label>
+                <input type="checkbox" [checked]="isSelectedRole(role.name)" (change)="toggleRoleSelection(role.id)">
+                {{ role.name }}
+              </label>
             </div>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Kapat</button>
-            <button type="button" class="btn btn-primary" (click)="createResponse(callrecordId,txtMessage)">Cevapla</button>
+            <button type="button" class="btn btn-primary" (click)="assignRole()">Rol Ata</button>
           </div>
         </div>
       </div>
-    </div> -->
+    </div>

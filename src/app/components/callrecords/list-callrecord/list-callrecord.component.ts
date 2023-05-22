@@ -90,7 +90,7 @@ export class ListCallrecordComponent implements OnInit {
 
   async getRepresentatives(){
     this.selectedRepresentativeId=null;
-    const representatives:{ totalCount: number; datas: ListUser[]}= await this.userService.getFilterByRoleName(0, 15,"temsilci",()=>console.log("Temsilciler Listelendi"),()=>this.toastrService.message("Temsilciler Listelenemedi!","Hata!",{messageType:ToastrMessageType.Error,position:ToastrPosition.TopRight})
+    const representatives:{ totalCount: number; datas: ListUser[]}= await this.userService.getFilterByRoleName(0, 15,"temsilci",()=>console.log("Temsilciler Listelendi"),errorMessage=>this.toastrService.message(`Temsilciler Listelenemedi!${errorMessage}`,"Hata!",{messageType:ToastrMessageType.Error,position:ToastrPosition.TopRight})
     );
   
   this.representatives=representatives.datas;

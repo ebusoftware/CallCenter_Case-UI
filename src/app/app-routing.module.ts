@@ -22,7 +22,8 @@ const routes: Routes = [
       {path:"register", component:RegisterComponent , loadChildren:()=> import('./components/register/register.module').then(m=>m.RegisterModule)},
       {path:"create-request", component:CreateRequestComponent , loadChildren:()=> import('./components/requests/create-request/create-request.module').then(m=>m.CreateRequestModule),canActivate:[AuthGuard]},
       {path:"create-callrecord", component:CreateCallrecordComponent , loadChildren:()=> import('./components/callrecords/create-callrecord/create-callrecord.module').then(m=>m.CreateCallrecordModule),canActivate:[AuthGuard]},
-      {path:"list-callrecord", component:ListCallrecordComponent , loadChildren:()=> import('./components/callrecords/list-callrecord/list-callrecord.module').then(m=>m.ListCallrecordModule),canActivate:[AuthGuard]}
+      {path:"list-callrecord", component:ListCallrecordComponent , loadChildren:()=> import('./components/callrecords/list-callrecord/list-callrecord.module').then(m=>m.ListCallrecordModule),canActivate:[AuthGuard]},
+      
 
 
 

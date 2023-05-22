@@ -4,6 +4,7 @@ import { UserComponent } from './user.component';
 import { ListUserComponent } from './list-user/list-user.component';
 import { SearchfilterPipe } from 'src/app/pipes/searchfilter.pipe';
 import { CreateUserComponent } from './create-user/create-user.component';
+import { FormsModule } from '@angular/forms';
 
 
 
@@ -15,7 +16,8 @@ import { CreateUserComponent } from './create-user/create-user.component';
     
   ],
   imports: [
-    CommonModule
+    CommonModule,
+    FormsModule
   ]
 })
 export class UserModule { }
