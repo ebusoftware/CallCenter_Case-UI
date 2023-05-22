@@ -72,7 +72,6 @@ export class ListCallrecordComponent implements OnInit {
 
   async handleRepresentativeSelection(representativeId: string) {
     if(representativeId != "0"){
-      this.selectedPage = 1; // Seçilen temsilciye göre sayfalamayı sıfırla
       const callRecords:{ totalCount: number; callRecords: ListCallRecord[]}= (await this.callRecordService.filterByRepresentative(this.selectedPage-1, this.CallRecordPerPage,representativeId,()=>console.log(""),()=>this.toastrService.message("Filtreleme Başarısız!","Hata!",{messageType:ToastrMessageType.Error,position:ToastrPosition.TopRight}),
       ));
       
@@ -80,7 +79,6 @@ export class ListCallrecordComponent implements OnInit {
     this.totalCallRecordCount=callRecords.totalCount
     }
     else{
-      this.selectedPage = 1;
       await this.getCallRecords();
     }
     
@@ -184,9 +182,18 @@ async deleteCallRecord(id:number){
 }
 
 
-changePage(page:number){
+async changePage(page:number){
   this.selectedPage = page;
-  this.getCallRecords();
+  if(this.selectedRepresentativeId)
+  {
+    await this.handleRepresentativeSelection(this.selectedRepresentativeId);
+  }
+  else
+  {
+    this.selectedRepresentativeId=null;
+    await this.getCallRecords();
+
+  }
 
  }
 
